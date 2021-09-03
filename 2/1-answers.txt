@@ -1,0 +1,63 @@
+1. Print the result of http://127.0.0.1:5000/chain
+
+{
+   "length":3,
+   "chain":[
+      {
+         "index":0,
+         "transactions":[
+
+         ],
+         "timestamp":1630652643.5882802,
+         "previous_hash":"0",
+         "nonce":0,
+         "hash":"a9f04dc008b037e14f28257df12d37dc8ef9f266db1da1d3423c65c3453e5fad"
+      },
+      {
+         "index":1,
+         "transactions":[
+            {
+               "sender":"alice",
+               "receiver":"bob",
+               "amount":3.5
+            }
+         ],
+         "timestamp":1630652643.5882802,
+         "previous_hash":"a9f04dc008b037e14f28257df12d37dc8ef9f266db1da1d3423c65c3453e5fad",
+         "nonce":232,
+         "hash":"00e55a277cd00a3e8bd09fecb0a5415e8549c37ffe6148e9ea23db438ed38d8c"
+      },
+      {
+         "index":2,
+         "transactions":[
+            {
+               "sender":"bob",
+               "receiver":"sami",
+               "amount":2.1
+            },
+            {
+               "sender":"sami",
+               "receiver":"alice",
+               "amount":2
+            }
+         ],
+         "timestamp":1630652643.5902815,
+         "previous_hash":"00e55a277cd00a3e8bd09fecb0a5415e8549c37ffe6148e9ea23db438ed38d8c",
+         "nonce":183,
+         "hash":"0081fd258bc13eeee99e299940b6d57741457c544368caa70867e6f457b7586e"
+      }
+   ]
+}
+
+
+2. What is the modification/assumptions that you made it?
+
+Added transfer transaction
+Assuming structure of transaction
+Assuming no signature verification is required
+
+3. What is missing the part in the previous code ?
+
+Storing chain state - it is not feasible to reconstruct current state from genesis each time Bob's balance is requested
+Transaction signature verification
+Consensus algorithm for several nodes to agree on authoritative chain
