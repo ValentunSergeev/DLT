@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Web 3 Demo</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.5.2/web3.min.js" integrity="sha512-mYc+D+NmmyR0Gcrzyae7q5HguBCS4cBHAsIk7gGhu0/ZyGg4z2YZDjyR2YQA/IMCMTNs4mnlw3vVdERzewpekQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script></head>
+
+<body>
+
+    Calculator
+    <br >
+    <input type="text" id="first">
+    <input type="text" id="second">
+    <button onclick="sum();">Plus</button>
+    <button onclick="diff();">Minus</button>
+    <button onclick="div();">Div</button>
+    <button onclick="mul();">Mul</button>
+    <br /><br />
+    Result: <span id="status">Loading...</span>
+
+    <script type="text/javascript">
+        async function loadWeb3() {
+            if (window.ethereum) {
+                window.web3 = new Web3(window.ethereum);
+                window.ethereum.enable();
+            }
+        }
+
+        async function loadContract() {
+            return await new window.web3.eth.Contract([
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "first",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "second",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "div",
+                    "outputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "pure",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "first",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "second",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "minus",
+                    "outputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "pure",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "first",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "second",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "mul",
+                    "outputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "pure",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "first",
+                            "type": "uint256"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "second",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "plus",
+                    "outputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "pure",
+                    "type": "function"
+                }
+            ], '0x2C4494dcfB6303FF888ef44E01Fe66946daae1dF');
+        }
+
+        async function sum() {
+            await executeContractCall(window.contract.methods.plus, 'Summing')
+        }
+
+        async function diff() {
+            await executeContractCall(window.contract.methods.minus, 'Dividing')
+        }
+
+        async function mul() {
+            await executeContractCall(window.contract.methods.mul, 'Multiplying')
+        }
+
+        async function div() {
+            await executeContractCall(window.contract.methods.div, 'Dividing')
+        }
+
+        async function executeContractCall(contractFunction, initialStatus) {
+            updateStatus(`${initialStatus}...`);
+
+            try {
+                const [first, second] = getInputs()
+
+                const result = await contractFunction(first, second).call()
+
+                updateStatus(result);
+            } catch (err) {
+                updateStatus(err)
+            }
+        }
+
+        async function load() {
+            await loadWeb3();
+            window.contract = await loadContract();
+            updateStatus('Ready!');
+        }
+
+        function updateStatus(status) {
+            const statusEl = document.getElementById('status');
+            statusEl.innerHTML = status;
+            console.log(status);
+        }
+
+        function getInputs() {
+            first = document.getElementById("first").value
+            second = document.getElementById("second").value
+
+            return [parseInt(first), parseInt(second)]
+        }
+
+        load();
+    </script>
+</body>
+
+</html>
